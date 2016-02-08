@@ -7,6 +7,7 @@ import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
+import org.apache.flink.api.java.typeutils.ValueTypeInfo;
 import org.apache.flink.core.io.IOReadableWritable;
 import org.apache.flink.types.ShortValue;
 import org.apache.hadoop.io.ShortWritable;
@@ -21,7 +22,8 @@ public class WordCount {
         String binaryFile = "src/main/resources/sample.bin";
         SerializedInputFormat<ShortValue> sif = new SerializedInputFormat<>();
         sif.setFilePath(binaryFile);
-        DataSet<ShortValue> ds = env.createInput(sif);
+        DataSet<ShortValue> ds = env.createInput(sif,
+            ValueTypeInfo.SHORT_VALUE_TYPE_INFO);
         System.out.println(ds.count());
     }
 }

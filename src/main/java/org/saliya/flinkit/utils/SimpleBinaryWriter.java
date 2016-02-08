@@ -12,6 +12,8 @@ public class SimpleBinaryWriter {
                     dos.writeShort(i*size+j);
                 }
             }
+            dos.flush();
+            dos.close();
         }
         catch (IOException e) {
             e.printStackTrace();
