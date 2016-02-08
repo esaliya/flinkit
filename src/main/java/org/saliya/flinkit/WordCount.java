@@ -3,6 +3,8 @@ package org.saliya.flinkit;
 import org.apache.flink.api.common.io.BinaryInputFormat;
 import org.apache.flink.api.common.io.FileInputFormat;
 import org.apache.flink.api.common.io.SerializedInputFormat;
+import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.core.io.IOReadableWritable;
@@ -18,6 +20,8 @@ public class WordCount {
 
         String binaryFile = "src/main/resources/sample.bin";
         SerializedInputFormat<ShortValue> sif = new SerializedInputFormat<>();
-        sif.open();
+        sif.setFilePath(binaryFile);
+        DataSet<ShortValue> ds = env.createInput(sif);
+        System.out.println(ds.count());
     }
 }
