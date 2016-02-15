@@ -42,17 +42,17 @@ public class Statistics {
         int globalColCount = Integer.parseInt(args[1]);
         boolean isBigEndian = Boolean.parseBoolean(args[2]);
         boolean divideByShortMax = Boolean.parseBoolean(args[3]);
-
+        double factor = divideByShortMax ? 1.0/Short.MAX_VALUE : 1.0;
         ShortMatrixInputFormat smif = new ShortMatrixInputFormat();
         smif.setFilePath(binaryFile);
-        smif.setDivideByShortMax(divideByShortMax);
         smif.setBigEndian(isBigEndian);
         smif.setGlobalColumnCount(globalColCount);
         DataSet<Short[]> ds = env.createInput(smif, BasicArrayTypeInfo.SHORT_ARRAY_TYPE_INFO);
         MapOperator<Short[], DoubleStatistics> op = ds.map(arr -> {
+
             DoubleStatistics stats = new DoubleStatistics();
             for (int i = 0; i < arr.length; ++i){
-                stats.accept(arr[i]);
+                stats.accept(arr[i]*factor);
             }
 
             /*for (int i = 0; i < arr.length; ++i){

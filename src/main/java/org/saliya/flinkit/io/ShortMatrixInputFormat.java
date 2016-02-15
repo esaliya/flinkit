@@ -28,7 +28,6 @@ public class ShortMatrixInputFormat extends FileInputFormat<Short[]> {
         .getLogger(ShortMatrixInputFormat.class);
 
     private boolean isBigEndian = true;
-    private boolean divideByShortMax;
     private int globalColumnCount;
 
     private boolean isRead = false;
@@ -127,14 +126,6 @@ public class ShortMatrixInputFormat extends FileInputFormat<Short[]> {
 
     public void setBigEndian(boolean bigEndian) {
         isBigEndian = bigEndian;
-    }
-
-    public boolean isDivideByShortMax() {
-        return divideByShortMax;
-    }
-
-    public void setDivideByShortMax(boolean divideByShortMax) {
-        this.divideByShortMax = divideByShortMax;
     }
 
     public int getGlobalColumnCount() {
