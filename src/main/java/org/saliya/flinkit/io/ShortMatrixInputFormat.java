@@ -4,6 +4,8 @@ import org.apache.flink.api.common.io.FileInputFormat;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.core.fs.*;
 import org.apache.flink.core.fs.local.LocalFileSystem;
+import org.apache.flink.hadoop.shaded.com.google.common.io
+    .LittleEndianDataInputStream;
 import org.apache.flink.types.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,9 +67,17 @@ public class ShortMatrixInputFormat extends FileInputFormat<Short[]> {
     public Short[] nextRecord(Short[] reuse) throws IOException {
         int shortLength = (int)(this.splitLength / Short.BYTES);
         reuse = new Short[shortLength];
-        DataInputStream dis = new DataInputStream(this.stream);
-        for (int i = 0; i < shortLength; ++i){
-            reuse[i] = dis.readShort();
+
+        if (isBigEndian) {
+            DataInputStream dis = new DataInputStream(this.stream);
+            for (int i = 0; i < shortLength; ++i) {
+                reuse[i] = dis.readShort();
+            }
+        } else {
+            LittleEndianDataInputStream ldis = new LittleEndianDataInputStream(this.stream);
+            for (int i = 0; i < shortLength; ++i) {
+                reuse[i] = ldis.readShort();
+            }
         }
         isRead = true;
         return reuse;

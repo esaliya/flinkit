@@ -40,10 +40,13 @@ public class Statistics {
         System.out.println(ds.count());*/
 
         int globalColCount = Integer.parseInt(args[1]);
+        boolean isBigEndian = Boolean.parseBoolean(args[2]);
+        boolean divideByShortMax = Boolean.parseBoolean(args[3]);
+
         ShortMatrixInputFormat smif = new ShortMatrixInputFormat();
         smif.setFilePath(binaryFile);
-        smif.setDivideByShortMax(false);
-//        smif.setEndinness(ByteOrder.BIG_ENDIAN);
+        smif.setDivideByShortMax(divideByShortMax);
+        smif.setBigEndian(isBigEndian);
         smif.setGlobalColumnCount(globalColCount);
         DataSet<Short[]> ds = env.createInput(smif, BasicArrayTypeInfo.SHORT_ARRAY_TYPE_INFO);
         MapOperator<Short[], DoubleStatistics> op = ds.map(arr -> {
