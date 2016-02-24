@@ -23,11 +23,12 @@ import org.saliya.flinkit.io.ShortMatrixInputFormat;
 
 import java.nio.ByteOrder;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class Statistics {
     public static void main(String[] args) throws Exception {
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
-//        env.setParallelism(3);
+        env.setParallelism(4);
         /*DataSet<String> text = env.readTextFile("src/main/resources/sample.txt");
         System.out.println(text.count());*/
 
@@ -48,7 +49,11 @@ public class Statistics {
         smif.setBigEndian(isBigEndian);
         smif.setGlobalColumnCount(globalColCount);
         DataSet<Short[]> ds = env.createInput(smif, BasicArrayTypeInfo.SHORT_ARRAY_TYPE_INFO);
-        MapOperator<Short[], DoubleStatistics> op = ds.map(arr -> {
+
+//        System.out.println(ds.count());
+
+//        MapOperator<Short[], DoubleStatistics> op = ds.map(arr -> {
+        DataSet<DoubleStatistics> op = ds.map(arr -> {
 
             DoubleStatistics stats = new DoubleStatistics();
             for (int i = 0; i < arr.length; ++i){
@@ -63,7 +68,11 @@ public class Statistics {
             }*/
             return stats;
         });
-        op.reduce((a,b)-> {a.combine(b); return a;}).print();
+
+        List<DoubleStatistics>
+            result = op.reduce((a, b)-> {a.combine(b); return a;}).collect();
+        System.out.println(result.get(0));
+//        System.out.println(op.count());
 //        System.out.println(ds.count());
     }
 }

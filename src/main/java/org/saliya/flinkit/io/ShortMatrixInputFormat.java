@@ -64,6 +64,8 @@ public class ShortMatrixInputFormat extends FileInputFormat<Short[]> {
 
     @Override
     public Short[] nextRecord(Short[] reuse) throws IOException {
+        System.out.println("***" + reuse.length);
+        System.out.println("reading record from split: " + this.currentSplit.getSplitNumber());
         int shortLength = (int)(this.splitLength / Short.BYTES);
         reuse = new Short[shortLength];
 
@@ -84,6 +86,7 @@ public class ShortMatrixInputFormat extends FileInputFormat<Short[]> {
 
     @Override
     public void open(FileInputSplit fileSplit) throws IOException {
+        System.out.println("****Opening split");
         // This uses an input stream, later see how to change to
         // memory maps, will have to change nextRecord() method as well
         super.open(fileSplit);
